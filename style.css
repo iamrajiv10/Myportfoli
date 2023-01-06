@@ -205,7 +205,7 @@ p {
 
 /* Hero Section */
 #hero {
-	background-image: url("https://cdn-images-1.medium.com/max/1200/1*SzN6u2U98S4RyhWo_WyaHQ.png");
+	background-image: url(./img/hero-bg.png);
 	background-size: cover;
 	background-position: top center;
 	position: relative;
