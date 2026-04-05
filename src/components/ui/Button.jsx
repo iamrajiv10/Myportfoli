@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "../../utils/cn";
 
-const Button = React.forwardRef(({ className, variant = "primary", size = "md", asChild = false, ...props }, ref) => {
+const Button = React.forwardRef(({ className, variant = "primary", size = "md", ...props }, ref) => {
   const variants = {
     primary: "bg-brand-primary hover:bg-brand-primary/90 text-white shadow-lg shadow-brand-primary/20",
     secondary: "bg-slate-800 hover:bg-slate-700 text-white border border-white/10",

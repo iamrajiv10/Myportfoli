@@ -4,8 +4,6 @@ import { Briefcase, Calendar, MapPin, ChevronRight } from "lucide-react";
 import { EXPERIENCE } from "../constants";
 import { Card } from "../components/ui/Card";
 import { Badge } from "../components/ui/Badge";
-import { cn } from "../utils/cn";
-
 const ExperienceCard = ({ exp, index, progress }) => {
   const opacity = useTransform(progress, [index * 0.33, index * 0.33 + 0.1, (index + 1) * 0.33 - 0.1, (index + 1) * 0.33], [0, 1, 1, 0]);
   const scale = useTransform(progress, [index * 0.33, index * 0.33 + 0.1, (index + 1) * 0.33 - 0.1, (index + 1) * 0.33], [0.8, 1, 1, 0.8]);
@@ -70,6 +68,45 @@ const ExperienceCard = ({ exp, index, progress }) => {
   );
 };
 
+const TimelineItem = ({ idx, exp, progress }) => {
+  const start = idx * 0.33;
+  const end = (idx + 1) * 0.33;
+
+  const labelColor = useTransform(
+    progress,
+    [start - 0.05, start, end - 0.05, end],
+    ["rgba(148, 163, 184, 0.5)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(148, 163, 184, 0.5)"]
+  );
+
+  const labelScale = useTransform(
+    progress,
+    [start - 0.05, start, end - 0.05, end],
+    [1, 1.05, 1.05, 1]
+  );
+
+  const scaleXProgress = useTransform(progress, [start, end], [0, 1]);
+
+  return (
+    <div className="flex-1">
+      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+        <motion.div 
+          style={{ 
+            scaleX: scaleXProgress,
+            originX: 0
+          }}
+          className="h-full bg-linear-to-r from-brand-primary via-brand-secondary to-brand-accent"
+        />
+      </div>
+      <motion.p 
+        style={{ color: labelColor, scale: labelScale }}
+        className="mt-3 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all"
+      >
+        {exp.company}
+      </motion.p>
+    </div>
+  );
+};
+
 const Experience = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -102,43 +139,14 @@ const Experience = () => {
 
           {/* Timeline Indicator */}
           <div className="hidden md:flex gap-4 mb-12">
-            {EXPERIENCE.map((exp, idx) => {
-              // Range where this specific card is active
-              const start = idx * 0.33;
-              const end = (idx + 1) * 0.33;
-              
-              const labelColor = useTransform(
-                smoothProgress,
-                [start - 0.05, start, end - 0.05, end],
-                ["rgba(148, 163, 184, 0.5)", "rgba(255, 255, 255, 1)", "rgba(255, 255, 255, 1)", "rgba(148, 163, 184, 0.5)"]
-              );
-
-              const labelScale = useTransform(
-                smoothProgress,
-                [start - 0.05, start, end - 0.05, end],
-                [1, 1.05, 1.05, 1]
-              );
-
-              return (
-                <div key={exp.company} className="flex-1">
-                  <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                    <motion.div 
-                      style={{ 
-                        scaleX: useTransform(smoothProgress, [start, end], [0, 1]),
-                        originX: 0
-                      }}
-                      className="h-full bg-linear-to-r from-brand-primary via-brand-secondary to-brand-accent"
-                    />
-                  </div>
-                  <motion.p 
-                    style={{ color: labelColor, scale: labelScale }}
-                    className="mt-3 text-[10px] sm:text-xs uppercase tracking-widest font-bold transition-all"
-                  >
-                    {exp.company}
-                  </motion.p>
-                </div>
-              );
-            })}
+            {EXPERIENCE.map((exp, idx) => (
+              <TimelineItem 
+                key={exp.company} 
+                idx={idx} 
+                exp={exp} 
+                progress={smoothProgress} 
+              />
+            ))}
           </div>
         </div>
 
